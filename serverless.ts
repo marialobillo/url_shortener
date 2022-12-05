@@ -18,7 +18,17 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 
-      urlTable: '${self:custom.urlTableName}'
+      urlTable: '${self:custom.urlTableName}',
+      baseUrl: {
+        'Fn::Join': [
+          '',
+          [
+            'https://', 
+            { Ref: 'HttpApi' }, 
+            '.execute-api.${self:provider.region}.amazaonaws.com',
+          ]
+        ]
+      }
     },
   },
   // import the function via paths
