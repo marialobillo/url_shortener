@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+import functions from './serverless/functions';
+import dynamoResources from './serverless/dynamoResources';
 
 const serverlessConfiguration: AWS = {
   service: 'url-shortener',
@@ -16,12 +17,20 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+
+      urlTable: '${self:custom.urlTableName}'
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions,
+  resources: {
+    Resources: {
+      ...dynamoResources,
+    },
+  },
   package: { individually: true },
   custom: {
+    urlTable: '${sls:stage}-url-table',
     esbuild: {
       bundle: true,
       minify: false,
