@@ -10,6 +10,16 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    region: 'eu-central-1',
+    profile: 'serverlessUser',
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: "dynamodb:*",
+        Resource:
+          "arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.urlTableName}",
+      },
+    ],
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -25,7 +35,7 @@ const serverlessConfiguration: AWS = {
           [
             'https://', 
             { Ref: 'HttpApi' }, 
-            '.execute-api.${self:provider.region}.amazaonaws.com',
+            '.execute-api.${self:provider.region}.amazonaws.com',
           ]
         ]
       }
@@ -40,7 +50,7 @@ const serverlessConfiguration: AWS = {
   },
   package: { individually: true },
   custom: {
-    urlTable: '${sls:stage}-url-table',
+    urlTableName: "${sls:stage}-url-table",
     esbuild: {
       bundle: true,
       minify: false,
