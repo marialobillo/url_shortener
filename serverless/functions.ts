@@ -12,6 +12,17 @@ const functions: AWS["functions"] = {
       },
     ],
   },
+  getUrl: {
+    handler: 'src/functions/getUrl/index.handler',
+    events: [
+      {
+        httpApi: {
+          path: '/{code}',
+          method: 'get',
+        }
+      }
+    ]
+  }
 };
 
 
